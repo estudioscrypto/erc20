@@ -33,17 +33,15 @@ contract CCT is IERC20 {
         emit Transfer(address(0), msg.sender, totalSupply);
     }
 
-    function transfer(address recipient, uint amount) external returns (bool) {
+    function transfer(address recipient, uint amount) external {
         balanceOf[msg.sender] -= amount;
         balanceOf[recipient] += amount;
         emit Transfer(msg.sender, recipient, amount);
-        return true;
     }
 
-    function approve(address spender, uint amount) external returns (bool) {
+    function approve(address spender, uint amount) external {
         allowance[msg.sender][spender] = amount;
         emit Approval(msg.sender, spender, amount);
-        return true;
     }
 
     function transferFrom(
