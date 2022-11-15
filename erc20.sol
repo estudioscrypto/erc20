@@ -9,10 +9,10 @@ pragma solidity ^0.8.10;
 interface IERC20 {
     function totalSupply() external view returns (uint);
     function balanceOf(address account) external view returns (uint);
-    function transfer(address recipient, uint amount) external returns (bool);
+    function transfer(address recipient, uint amount) external;
     function allowance(address owner, address spender) external view returns (uint);
-    function approve(address spender, uint amount) external returns (bool);
-    function transferFrom( address sender,address recipient,uint amount ) external returns (bool);
+    function approve(address spender, uint amount) external;
+    function transferFrom( address sender,address recipient,uint amount ) external;
     event Transfer(address indexed from, address indexed to, uint value);
     event Approval(address indexed owner, address indexed spender, uint value);
 }
@@ -33,7 +33,7 @@ contract CCT is IERC20 {
         emit Transfer(address(0), msg.sender, totalSupply);
     }
 
-    function transfer(address recipient, uint amount) external {
+    function transfer(address recipient, uint amount) public {
         balanceOf[msg.sender] -= amount;
         balanceOf[recipient] += amount;
         emit Transfer(msg.sender, recipient, amount);
@@ -44,16 +44,11 @@ contract CCT is IERC20 {
         emit Approval(msg.sender, spender, amount);
     }
 
-    function transferFrom(
-        address sender,
-        address recipient,
-        uint amount
-    ) external returns (bool) {
+    function transferFrom( address sender, address recipient, uint amount ) external {
         allowance[sender][msg.sender] -= amount;
         balanceOf[sender] -= amount;
         balanceOf[recipient] += amount;
         emit Transfer(sender, recipient, amount);
-        return true;
     }
 
     function burn(uint amount) public {
@@ -67,7 +62,7 @@ contract CCT is IERC20 {
         require(msg.sender == Owner, "ERROR: YOU NOT OWNER");
         _;
     }
-
+    
     function mint(uint amount) public onlyOwner{
         totalSupply = totalSupply+amount;
         balanceOf[msg.sender] += amount;
